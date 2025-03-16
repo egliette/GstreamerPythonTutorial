@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  gstreamer_python:
+    image: gstreamer_python:0.0.1
+    container_name: gstreamer_python
+    build: .
+    volumes:
+      - ./:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Mount the X11 Unix socket - Display window in container
+    environment:
+      - DISPLAY=${DISPLAY}  # Pass the host DISPLAY variable - Display window in container
+    network_mode: "host"
+    tty: True
