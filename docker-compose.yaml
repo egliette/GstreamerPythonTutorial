@@ -8,7 +8,9 @@ services:
     volumes:
       - ./:/app
       - /tmp/.X11-unix:/tmp/.X11-unix  # Mount the X11 Unix socket - Display window in container
+      - /mnt/wslg/PulseServer:/mnt/wslg/PulseServer # PulseServer socket - Play audio in container
     environment:
       - DISPLAY=${DISPLAY}  # Pass the host DISPLAY variable - Display window in container
+      - PULSE_SERVER=unix:/mnt/wslg/PulseServer # Play audio in container
     network_mode: "host"
     tty: True

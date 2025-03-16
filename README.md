@@ -1,6 +1,18 @@
 # Gstreamer with Python Tutorial
 
-How to re-implement all gstreamer basic tutorials
+How to re-implement all gstreamer basic tutorials.
+
+**Prerequisites:** This tutorial is designed to run inside a Docker container on WSL2. It assumes that readers have a basic understanding of Docker, WSL, and Python.
+
+## Setup
+
+After change the working directory into this repository and start WSL, run:
+
+```
+make build
+make run
+make attach
+```
 
 Check if Gstreamer is already installed by running:
 ```
