@@ -20,7 +20,7 @@ Gst.init(sys.argv[1:])
 
 # build the pipeline
 pipeline = Gst.parse_launch(
-    "playbin uri=file:///app/videos/street.mp4"
+    "playbin uri=file:///app/videos/street_5min.mp4"
 )
 
 # start playing
