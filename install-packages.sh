@@ -41,9 +41,10 @@ apt-get -y  install --no-install-recommends \
     libcairo2-dev \
     gcc \
     python3-dev \
-    libgirepository1.0-dev 
-
-
+    libgirepository1.0-dev \
+    python3-gi \
+    gobject-introspection \
+    gir1.2-gtk-3.0
 
 # Delete cached files we don't need anymore (note that if you're
 # using official Docker images for Debian or Ubuntu, this happens
