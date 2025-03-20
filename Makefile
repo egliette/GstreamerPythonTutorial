@@ -17,3 +17,8 @@ reattach:
 	docker-compose down
 	docker-compose up -d
 	docker exec -it gstreamer_python bash	
+
+init: 
+	make build
+	make run
+	make attach

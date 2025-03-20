@@ -12,5 +12,6 @@ services:
     environment:
       - DISPLAY=${DISPLAY}  # Pass the host DISPLAY variable - Display window in container
       - PULSE_SERVER=unix:/mnt/wslg/PulseServer # Play audio in container
+      - XDG_RUNTIME_DIR=/run/user/1/ # Prevent raise error message XDG_RUNTIME_DIR is invalid 
     network_mode: "host"
     tty: True

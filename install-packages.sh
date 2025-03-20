@@ -44,7 +44,8 @@ apt-get -y  install --no-install-recommends \
     libgirepository1.0-dev \
     python3-gi \
     gobject-introspection \
-    gir1.2-gtk-3.0
+    gir1.2-gtk-3.0 \
+    graphviz
 
 # Delete cached files we don't need anymore (note that if you're
 # using official Docker images for Debian or Ubuntu, this happens
