@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 import sys
 import logging
+logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
+logger = logging.getLogger(__name__)
+
 import gi
 gi.require_version('Gst', '1.0')
 gi.require_version("GLib", "2.0")
 from gi.repository import Gst, GLib
-
-# Setup logging
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
-logger = logging.getLogger(__name__)
-
-# Initialize GStreamer
-Gst.init(sys.argv)
 
 class PipelineHandler:
     def __init__(self, uri):
@@ -75,6 +71,7 @@ class PipelineHandler:
             logger.info("Pipeline stopped.")
 
 if __name__ == "__main__":
+    Gst.init(sys.argv)
     # Change the URI as needed
     uri = "https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm"
     handler = PipelineHandler(uri)
