@@ -1,17 +1,24 @@
-#!/usr/bin/env python3
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/media-formats-and-pad-capabilities.html?gi-language=python
+"""
+
 import os
-# Show error and log messages
+
 os.environ["GST_DEBUG"] = "2"
-import sys
 import logging
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
+import sys
+
+logging.basicConfig(
+    level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
-import sys
 import gi
+
 gi.require_version("Gst", "1.0")
 gi.require_version("GLib", "2.0")
-from gi.repository import Gst, GLib
+from gi.repository import GLib, Gst
 
 
 def print_field(field, value, pfx):
@@ -139,7 +146,10 @@ def main():
         try:
             msg = bus.timed_pop_filtered(
                 0.5 * Gst.SECOND,
-                Gst.MessageType.ERROR | Gst.MessageType.EOS | Gst.MessageType.STATE_CHANGED)
+                Gst.MessageType.ERROR
+                | Gst.MessageType.EOS
+                | Gst.MessageType.STATE_CHANGED,
+            )
 
             if msg:
                 t = msg.type
@@ -157,7 +167,9 @@ def main():
                     # pipeline
                     if msg.src == pipeline:
                         old, new, pending = msg.parse_state_changed()
-                        logger.debug(f"Pipeline state changed from {Gst.Element.state_get_name(old)} to {Gst.Element.state_get_name(new)} :")
+                        logger.debug(
+                            f"Pipeline state changed from {Gst.Element.state_get_name(old)} to {Gst.Element.state_get_name(new)} :"
+                        )
 
                         # print the current capabilities of the sink
                         print_pad_capabilities(sink, "sink")
@@ -173,5 +185,5 @@ def main():
     pipeline.set_state(Gst.State.NULL)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
