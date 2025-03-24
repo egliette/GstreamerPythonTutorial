@@ -1,13 +1,25 @@
-#!/usr/bin/env python3
-import sys
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/streaming.html?gi-language=python
+"""
+
+import os
+
+os.environ["GST_DEBUG"] = "2"
 import logging
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
+import sys
+
+logging.basicConfig(
+    level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 import gi
-gi.require_version('Gst', '1.0')
+
+gi.require_version("Gst", "1.0")
 gi.require_version("GLib", "2.0")
-from gi.repository import Gst, GLib
+from gi.repository import GLib, Gst
+
 
 class PipelineHandler:
     def __init__(self, uri):
@@ -15,12 +27,12 @@ class PipelineHandler:
         self.pipeline = Gst.parse_launch(f"playbin uri={uri}")
         self.loop = GLib.MainLoop()
         self.is_live = False
-        
+
         # Setup bus message handling
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect("message", self.on_message)
-    
+
     def on_message(self, bus, message):
         t = message.type
         if t == Gst.MessageType.ERROR:
@@ -41,7 +53,7 @@ class PipelineHandler:
                 return
             if self.is_live:
                 return
-       
+
             if percent < 100:
                 self.pipeline.set_state(Gst.State.PAUSED)
             else:
@@ -57,7 +69,7 @@ class PipelineHandler:
         if ret == Gst.StateChangeReturn.FAILURE:
             logger.error("Unable to set the pipeline to the playing state.")
             return
-        
+
         # Optionally, if the pipeline returns NO_PREROLL, mark as live stream:
         if ret == Gst.StateChangeReturn.NO_PREROLL:
             self.is_live = True
@@ -69,6 +81,7 @@ class PipelineHandler:
         finally:
             self.pipeline.set_state(Gst.State.NULL)
             logger.info("Pipeline stopped.")
+
 
 if __name__ == "__main__":
     Gst.init(sys.argv)
