@@ -1,38 +1,38 @@
-# Gstreamer with Python Tutorial
+# 🚀 GStreamer with Python Tutorial 🎥🐍
 
-How to re-implement all gstreamer basic tutorials.
+This repository contains Python implementations of the GStreamer tutorials from the [official GStreamer documentation](https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=python).
 
-**Prerequisites:** This tutorial is designed to run inside a Docker container on WSL2. It assumes that readers have a basic understanding of Docker, WSL, and Python.
+## 📌 Prerequisites
+📦 This tutorial runs inside a **Docker container** on **WSL2**.
+🛠️ Assumes basic knowledge of **Docker, WSL, and Python**.
 
-## Setup
+⚠️ **Warning**: Tested on **Windows 11 WSL** using Docker. If you face issues on another OS while building the Docker image, check `docker-compose.yaml` and adjust **volumes** and **environment variables**.
 
-After change the working directory into this repository and start WSL, run:
+## 🛠️ Setup
 
+1️⃣ Change to this repository’s directory and start WSL.
+2️⃣ Run:
+```bash
+make init
 ```
-make build
-make run
-make attach
-```
-
-Check if Gstreamer is already installed by running:
-```
+3️⃣ Check if GStreamer is installed:
+```bash
 gst-launch-1.0 --version
 ```
 
-## TCP Stream
+📼 **Video Assets**: Some tutorials use different videos for better visualization. 📥 [Download them here](https://drive.google.com/drive/folders/1jbqnScW60jC6H3wJ_yCsgATLO1MHAbff?usp=sharing) and save them in the `videos` folder.
 
-Server:
-```
-gst-launch-1.0 videotestsrc !   x264enc tune=zerolatency !   rtph264pay config-interval=1 pt=96 !  "application/x-rtp, media=video, encoding-name=H264, clock-rate=90000, payload=96" !   udpsink host=127.0.0.1 port=5000
-
-```
-
-Client:
-```
-gst-launch-1.0 -v udpsrc port=5000 caps="application/x-rtp, media=video, encoding-name=H264, clock-rate=90000, payload=96" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink
+▶️ **Run a tutorial**:
+```bash
+python bt01_hello_world.py
 ```
 
+## 📚 References
 
-Endpoint: `tcp://127.0.0.1:5000`
+🔗 [Official GStreamer Documentation](https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=python)
 
+🔗 [GStreamer Repository](https://gitlab.freedesktop.org/gstreamer/gstreamer)
 
+🔗 [Python GStreamer Tutorial Repo](https://github.com/gkralik/python-gst-tutorial)
+
+🔗 [GStreamer Code Snippets](https://github.com/rubenrua/GstreamerCodeSnippets)
