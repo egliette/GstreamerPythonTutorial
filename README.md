@@ -1,6 +1,6 @@
 # 🚀 GStreamer with Python Tutorial 🎥🐍
 
-This repository contains Python implementations of the GStreamer tutorials from the [official GStreamer documentation](https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=python).
+This repository contains Python implementations of the GStreamer tutorials from the [official GStreamer documentation](https://gstreamer.freedesktop.org/documentation/tutorials/basic/index.html?gi-language=python).
 
 ## 📌 Prerequisites
 📦 This tutorial runs inside a **Docker container** on **WSL2**.
