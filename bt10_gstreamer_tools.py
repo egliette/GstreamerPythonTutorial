@@ -1,3 +1,8 @@
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/gstreamer-tools.html?gi-language=python
+"""
+
 # Hey there! This is a summary of the GStreamer Tools Tutorial. ☕
 # Remember, this tutorial is about tools, not coding, so relax and enjoy!
 
