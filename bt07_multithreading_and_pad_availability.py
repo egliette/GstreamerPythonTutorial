@@ -1,14 +1,24 @@
-#!/usr/bin/env python3 
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/multithreading-and-pad-availability.html?gi-language=python
+"""
+
 import os
-# Show error and log messages
+
 os.environ["GST_DEBUG"] = "2"
-import sys
 import logging
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
+import sys
+
+logging.basicConfig(
+    level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s"
+)
 logger = logging.getLogger(__name__)
+
 import gi
+
 gi.require_version("Gst", "1.0")
 from gi.repository import Gst
+
 
 def main():
     # initialize GStreamer
@@ -29,10 +39,19 @@ def main():
     # create the empty pipeline
     pipeline = Gst.Pipeline.new("test-pipeline")
 
-    if (not pipeline or not audio_source or not tee or not audio_queue
-            or not audio_convert or not audio_resample or not audio_sink
-            or not video_queue or not visual or not video_convert
-            or not video_sink):
+    if (
+        not pipeline
+        or not audio_source
+        or not tee
+        or not audio_queue
+        or not audio_convert
+        or not audio_resample
+        or not audio_sink
+        or not video_queue
+        or not visual
+        or not video_convert
+        or not video_sink
+    ):
         logger.error("Not all elements could be created.")
         sys.exit(1)
 
@@ -62,7 +81,6 @@ def main():
     visual.link(video_convert)
     video_convert.link(video_sink)
 
-
     # manually link the tee, which has "Request" pads
     tee_src_pad_template = tee.get_pad_template("src_%u")
 
@@ -76,7 +94,6 @@ def main():
     video_queue_pad = video_queue.get_static_pad("sink")
     tee_video_pad.link(video_queue_pad)
 
-
     # start playing
     pipeline.set_state(Gst.State.PLAYING)
 
@@ -86,8 +103,8 @@ def main():
     while True:
         try:
             msg = bus.timed_pop_filtered(
-                0.5 * Gst.SECOND,
-                Gst.MessageType.ERROR | Gst.MessageType.EOS)
+                0.5 * Gst.SECOND, Gst.MessageType.ERROR | Gst.MessageType.EOS
+            )
             if msg:
                 terminate = True
         except KeyboardInterrupt:
@@ -98,5 +115,6 @@ def main():
 
     pipeline.set_state(Gst.State.NULL)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
