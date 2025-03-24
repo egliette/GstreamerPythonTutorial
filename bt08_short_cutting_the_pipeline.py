@@ -1,20 +1,29 @@
-#!/usr/bin/env python3
-import sys
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/short-cutting-the-pipeline.html?gi-language=python
+"""
+
 import os
 from array import array
+
+os.environ["GST_DEBUG"] = "2"
 import logging
+import sys
+
+logging.basicConfig(
+    level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 import gi
+
 gi.require_version("Gst", "1.0")
 gi.require_version("GstAudio", "1.0")
-from gi.repository import Gst, GLib, GstAudio
+from gi.repository import GLib, Gst, GstAudio
 
 # Constants
-CHUNK_SIZE = 1024    # bytes per buffer
+CHUNK_SIZE = 1024  # bytes per buffer
 SAMPLE_RATE = 44100  # samples per second
-
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
-logger = logging.getLogger(__name__)
 
 
 class Generator:
@@ -30,19 +39,19 @@ class Generator:
         self.sourceid = None  # will hold the GLib source ID for the idle callback
 
         # Create elements
-        self.app_source     = Gst.ElementFactory.make("appsrc", "audio_source")
-        self.tee            = Gst.ElementFactory.make("tee", "tee")
-        self.audio_queue    = Gst.ElementFactory.make("queue", "audio_queue")
+        self.app_source = Gst.ElementFactory.make("appsrc", "audio_source")
+        self.tee = Gst.ElementFactory.make("tee", "tee")
+        self.audio_queue = Gst.ElementFactory.make("queue", "audio_queue")
         self.audio_convert1 = Gst.ElementFactory.make("audioconvert", "audio_convert1")
         self.audio_resample = Gst.ElementFactory.make("audioresample", "audio_resample")
-        self.audio_sink     = Gst.ElementFactory.make("autoaudiosink", "audio_sink")
-        self.video_queue    = Gst.ElementFactory.make("queue", "video_queue")
+        self.audio_sink = Gst.ElementFactory.make("autoaudiosink", "audio_sink")
+        self.video_queue = Gst.ElementFactory.make("queue", "video_queue")
         self.audio_convert2 = Gst.ElementFactory.make("audioconvert", "audio_convert2")
-        self.visual         = Gst.ElementFactory.make("wavescope", "visual")
-        self.video_convert  = Gst.ElementFactory.make("videoconvert", "video_convert")
-        self.video_sink     = Gst.ElementFactory.make("autovideosink", "video_sink")
-        self.app_queue      = Gst.ElementFactory.make("queue", "app_queue")
-        self.app_sink       = Gst.ElementFactory.make("appsink", "app_sink")
+        self.visual = Gst.ElementFactory.make("wavescope", "visual")
+        self.video_convert = Gst.ElementFactory.make("videoconvert", "video_convert")
+        self.video_sink = Gst.ElementFactory.make("autovideosink", "video_sink")
+        self.app_queue = Gst.ElementFactory.make("queue", "app_queue")
+        self.app_sink = Gst.ElementFactory.make("appsink", "app_sink")
 
         self.pipeline = Gst.Pipeline.new("test-pipeline")
 
@@ -99,17 +108,23 @@ class Generator:
         tee_src_pad_template = self.tee.get_pad_template("src_%u")
 
         self.tee_audio_pad = self.tee.request_pad(tee_src_pad_template, None, None)
-        logger.info(f"Obtained request pad {self.tee_audio_pad.get_name()} for audio branch")
+        logger.info(
+            f"Obtained request pad {self.tee_audio_pad.get_name()} for audio branch"
+        )
         audio_queue_pad = self.audio_queue.get_static_pad("sink")
         self.tee_audio_pad.link(audio_queue_pad)
 
         self.tee_video_pad = self.tee.request_pad(tee_src_pad_template, None, None)
-        logger.info(f"Obtained request pad {self.tee_video_pad.get_name()} for video branch")
+        logger.info(
+            f"Obtained request pad {self.tee_video_pad.get_name()} for video branch"
+        )
         video_queue_pad = self.video_queue.get_static_pad("sink")
         self.tee_video_pad.link(video_queue_pad)
 
         self.tee_app_pad = self.tee.request_pad(tee_src_pad_template, None, None)
-        logger.info(f"Obtained request pad {self.tee_app_pad.get_name()} for app branch")
+        logger.info(
+            f"Obtained request pad {self.tee_app_pad.get_name()} for app branch"
+        )
         app_queue_pad = self.app_queue.get_static_pad("sink")
         self.tee_app_pad.link(app_queue_pad)
 
@@ -128,19 +143,18 @@ class Generator:
         self.d -= self.c / 1000.0
         freq = 1100 + 1000 * self.d
 
-
-        raw = array('H')
+        raw = array("H")
         for i in range(n_samples):  # Replace xrange with range
             self.a += self.b
             self.b -= self.a / freq
             a5 = (int(500 * self.a)) % 65535
             raw.append(a5)
 
-        b_data = raw.tobytes() 
+        b_data = raw.tobytes()
 
         self.num_samples += n_samples
 
-        #Set its timestamp and duration
+        # Set its timestamp and duration
         buffer = Gst.Buffer.new_allocate(None, len(b_data), None)
         buffer.fill(0, b_data)
         buffer.pts = Gst.util_uint64_scale(self.num_samples, Gst.SECOND, SAMPLE_RATE)
