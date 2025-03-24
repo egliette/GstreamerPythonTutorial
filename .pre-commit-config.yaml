@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.1.0  # Use your desired version of Black
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.12.0  # Use your desired version of isort
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/pre-commit/mirrors-flake8
+    rev: v5.0.4  # Use your desired version of flake8
+    hooks:
+      - id: flake8
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
