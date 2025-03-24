@@ -1,18 +1,26 @@
-#!/usr/bin/env python3
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/dynamic-pipelines.html?gi-language=python
+"""
+
 import os
-# Show error and log messages
+
 os.environ["GST_DEBUG"] = "2"
-import time
 import logging
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
+import time
+
+logging.basicConfig(
+    level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 import gi
-gi.require_version('Gst', '1.0')
+
+gi.require_version("Gst", "1.0")
 from gi.repository import Gst
 
 
-class Player():
+class Player:
 
     def __init__(self):
         # initialize GStreamer
@@ -70,7 +78,7 @@ class Player():
         return
 
     def play(self):
-       # start playing
+        # start playing
         self.pipeline.set_state(Gst.State.PLAYING)
 
         # listen to the bus
@@ -79,7 +87,9 @@ class Player():
         while True:
             msg = bus.timed_pop_filtered(
                 Gst.CLOCK_TIME_NONE,
-                Gst.MessageType.STATE_CHANGED | Gst.MessageType.EOS | Gst.MessageType.ERROR
+                Gst.MessageType.STATE_CHANGED
+                | Gst.MessageType.EOS
+                | Gst.MessageType.ERROR,
             )
 
             if not msg:
@@ -111,6 +121,7 @@ class Player():
 
         self.pipeline.set_state(Gst.State.NULL)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     p = Player()
     p.play()
