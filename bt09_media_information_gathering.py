@@ -1,16 +1,27 @@
-#!/usr/bin/env python3
-import sys
-import re
+"""
+This Python script is based on the GStreamer tutorial:
+https://gstreamer.freedesktop.org/documentation/tutorials/basic/media-information-gathering.html?gi-language=python
+"""
+
+import os
+
+os.environ["GST_DEBUG"] = "2"
 import logging
+import re
+import sys
+
+logging.basicConfig(
+    level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 import gi
+
 gi.require_version("Gst", "1.0")
 gi.require_version("GLib", "2.0")
 gi.require_version("GstPbutils", "1.0")
-from gi.repository import Gst, GLib, GstPbutils
+from gi.repository import GLib, Gst, GstPbutils
 
-logging.basicConfig(level=logging.DEBUG, format="[%(name)s] [%(levelname)s] - %(message)s")
-logger = logging.getLogger(__name__)
 
 def format_ns(ns):
     s, ns = divmod(ns, 1000000000)
@@ -19,19 +30,20 @@ def format_ns(ns):
 
     return "%u:%02u:%02u.%09u" % (h, m, s, ns)
 
+
 def parse_taglist(taglist):
     taglist_str = taglist.to_string()
-    # logger.debug(taglist_str)
-    taglist_str = taglist_str[len("taglist, "):].rstrip(";")
-    taglist_str = re.sub(r'\([^)]*\)', '', taglist_str)
-    taglist_str = taglist_str.replace('"', '')
-    taglist_str = taglist_str.replace('\\', '')
-    pattern = re.compile(r'\s*(?P<key>[\w-]+)=(?P<value>[^,]+)\s*(?:,|$)')
+    taglist_str = taglist_str[len("taglist, ") :].rstrip(";")
+    taglist_str = re.sub(r"\([^)]*\)", "", taglist_str)
+    taglist_str = taglist_str.replace('"', "")
+    taglist_str = taglist_str.replace("\\", "")
+    pattern = re.compile(r"\s*(?P<key>[\w-]+)=(?P<value>[^,]+)\s*(?:,|$)")
     parsed_dict = {
-        match.group("key"): match.group("value").strip() 
+        match.group("key"): match.group("value").strip()
         for match in pattern.finditer(taglist_str)
     }
     return parsed_dict
+
 
 class DiscovererApp:
     def __init__(self, uri, timeout=5 * Gst.SECOND):
@@ -61,7 +73,6 @@ class DiscovererApp:
             tags_dict = parse_taglist(tags)
             for tag_name, tag_value in tags_dict.items():
                 logger.info(f"{' ' * 2*(depth+2)}{tag_name}: {tag_value}")
-           
 
     def print_topology(self, sinfo, depth):
         if not sinfo:
@@ -75,7 +86,6 @@ class DiscovererApp:
             if streams:
                 for s in streams:
                     self.print_topology(s, depth + 1)
-       
 
     def on_discovered(self, discoverer, info, infile):
         uri = info.get_uri()
@@ -116,11 +126,10 @@ class DiscovererApp:
         logger.info(f"Seekable: {'yes' if seekable else 'no'}")
 
         sinfo = info.get_stream_info()
-  
+
         if sinfo:
             logger.info("Stream information:")
             self.print_topology(sinfo, 1)
-
 
     def on_finished(self, discoverer):
         logger.info("Finished discovering")
