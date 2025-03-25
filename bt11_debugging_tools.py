@@ -60,7 +60,7 @@ def main():
 
     png_file = dot_file.replace(".dot", ".png")
     subprocess.run(["dot", "-Tpng", dot_file, "-o", png_file])
-    print(f"Saved pipeline graph as {png_file}")
+    logger.info(f"Saved pipeline graph as {png_file}")
 
     # wait until EOS or error
     bus = pipeline.get_bus()
