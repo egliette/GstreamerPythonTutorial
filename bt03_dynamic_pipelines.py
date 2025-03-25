@@ -75,8 +75,6 @@ class Player:
         else:
             logger.info(f"Link succeeded (type '{new_pad_type}')")
 
-        return
-
     def play(self):
         # start playing
         self.pipeline.set_state(Gst.State.PLAYING)
