@@ -11,6 +11,7 @@ This repository contains Python implementations of the GStreamer tutorials from 
 ## 🛠️ Setup
 
 1️⃣ Change to this repository’s directory and start WSL.
+
 2️⃣ Run:
 ```bash
 make init
