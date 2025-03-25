@@ -19,6 +19,7 @@ apt-get -y upgrade
 # Install a new package, without unnecessary recommended packages:
 # Install Gstreamer
 apt-get -y  install --no-install-recommends  \
+    htop \
     libgstreamer1.0-dev \
     libgstreamer-plugins-base1.0-dev \
     libgstreamer-plugins-bad1.0-dev \

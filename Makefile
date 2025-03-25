@@ -7,18 +7,15 @@ run:
 stop:
 	docker-compose down
 
-clean:
-	docker system prune -af
-
 attach:
-	docker exec -it gstreamer_python bash	
+	docker exec -it gstreamer_python bash
 
 reattach:
 	docker-compose down
 	docker-compose up -d
-	docker exec -it gstreamer_python bash	
+	docker exec -it gstreamer_python bash
 
-init: 
+init:
 	make build
 	make run
 	make attach
